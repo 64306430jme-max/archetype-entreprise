@@ -237,13 +237,13 @@ def build_pdf_ent_retro(ent, normes, ans_r, p_r, ebe_r, rn_r, bfr_r, tres_r, det
             elif c == 0:
                 cell.get_text().set_ha("left")
 
-        _box(ax, 0.04, 0.225, 0.445, 0.110, fc="#ecfdf5", ec="#6ee7b7")
-        ax.text(0.055, 0.300, "ATOUTS & MARGES DE MANŒUVRE", fontsize=7.8, fontweight="bold", color="#065f46", transform=ax.transAxes)
-        _draw_lines(ax, 0.055, 0.275, [f"• {x}" for x in atouts_txt], wrap_w=54, step_y=0.024, gap_item=0.010, fontsize=6.8)
+        _box(ax, 0.04, 0.060, 0.445, 0.275, fc="#ecfdf5", ec="#6ee7b7")
+        ax.text(0.055, 0.305, "ATOUTS & MARGES DE MANŒUVRE", fontsize=7.8, fontweight="bold", color="#065f46", transform=ax.transAxes)
+        _draw_lines(ax, 0.055, 0.280, [f"• {x}" for x in atouts_txt], wrap_w=54, step_y=0.019, gap_item=0.008, fontsize=6.8)
 
-        _box(ax, 0.515, 0.225, 0.445, 0.110, fc="#fffbeb", ec="#fcd34d")
-        ax.text(0.530, 0.300, "VULNÉRABILITÉS & ALERTES", fontsize=7.8, fontweight="bold", color="#92400e", transform=ax.transAxes)
-        _draw_lines(ax, 0.530, 0.275, [f"• {x}" for x in vig_txt], wrap_w=54, step_y=0.024, gap_item=0.010, fontsize=6.8)
+        _box(ax, 0.515, 0.060, 0.445, 0.275, fc="#fffbeb", ec="#fcd34d")
+        ax.text(0.530, 0.305, "VULNÉRABILITÉS & ALERTES", fontsize=7.8, fontweight="bold", color="#92400e", transform=ax.transAxes)
+        _draw_lines(ax, 0.530, 0.280, [f"• {x}" for x in vig_txt], wrap_w=54, step_y=0.019, gap_item=0.008, fontsize=6.8)
 
         _footer_pdf(ax, "Revue Historique PME  •  Cabinet QUINZE — Direction Financière Externalisée", "Page 1/1")
         pdf.savefig(fig)
@@ -681,7 +681,7 @@ with onglets[1]:
     
     hs1, hs2 = st.columns([1, 2.5])
     with hs1:
-        st.metric("SCORING BANQUE DE FRANCE (Estimé)", f"{health_score} / 100", "Solide >= 75 | Vigilance 50-74")
+        st.metric("SCORING BDF (Estimé)", f"{health_score} / 100", "Solide >= 75 | Vigilance 50-74")
     with hs2:
         if health_score >= 75:
             st.success(f"**Structure bilancielle solide ({health_score}/100) :** L'EBE de {tx_ebe:.1f} % dégage une CAF suffisante. Le BFR est maîtrisé ({bfr_jours:.0f} jours) et le levier d'endettement ({levier_dette:.1f} x) est largement dans les clous bancaires.")
@@ -875,6 +875,7 @@ with onglets[3]:
     taux_is = 0.25
 
     for _ in ans_p:
+        # P&L Projection
         curr_ca *= (1 + tx_ca_vol/100.0) * (1 + tx_ca_prix/100.0)
         curr_ach *= (1 + tx_ca_vol/100.0) * (1 + tx_ach_proj/100.0) 
         curr_ext *= (1 + tx_ca_vol/100.0 * 0.5) * (1 + tx_ach_proj/100.0) 
