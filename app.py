@@ -99,7 +99,6 @@ def parse_balance_pme(file_obj):
         m = comptes.apply(lambda x: any(x.startswith(p) for p in pref))
         return float(debits[m].sum() if side == "debit" else credits[m].sum())
 
-    # SIG Produits
     ca_70 = sum_p(["70"], "credit")
     prod_stockee_71 = sum_p(["71"], "credit") - sum_p(["71"], "debit")
     prod_immo_72 = sum_p(["72"], "credit")
@@ -107,7 +106,6 @@ def parse_balance_pme(file_obj):
     aut_p = max(0.0, sum_p(["75", "78", "79"], "credit"))
     tp = ca_70 + prod_stockee_71 + prod_immo_72 + subv_74 + aut_p
 
-    # SIG Charges
     ach_60 = sum_p(["60"], "debit")
     var_stock_603 = sum_p(["603"], "debit") - sum_p(["603"], "credit")
     ext_61_62 = sum_p(["61", "62"], "debit")
@@ -122,7 +120,6 @@ def parse_balance_pme(file_obj):
 
     if tp <= 0 and tc <= 0: return None
 
-    # Bilan & BFR
     stock_3 = sum_p(["3"], "debit") - sum_p(["3"], "credit")
     client_41 = sum_p(["41"], "debit") - sum_p(["41"], "credit")
     fourn_40 = sum_p(["40"], "credit") - sum_p(["40"], "debit")
@@ -334,10 +331,10 @@ def build_pdf_ent_tbi(ent, normes, score, ca, ach_conso, ext_f, va, ms, ebe, fin
 
     ax.text(0.04, 0.248, f"REPÈRES PME SECTORIELS ({normes['type_court'].upper()})", fontsize=7.5, fontweight="bold", color="#0f172a", transform=ax.transAxes)
     refs = [
-        ("POINT MORT (SEUIL RENTABILITÉ)", "Couverture des frais fixes", ["Date = 365 * (Seuil / CA)", "Indique le jour de bascule bénéfice", "S'abaisse en augmentant la MCV"]),
-        ("BFR (BESOIN EN FONDS ROULEMENT)", "Consommation de trésorerie", [f"DSO < {normes['dso_max']} j et DPO > {normes['dpo_min']} j", "La croissance consomme du cash", "1 j de DSO gagné = cash immédiat"]),
-        ("COVENANTS BANCAIRES", "Capacité à lever de la dette", [f"Dette Nette / EBE < {normes['levier_dette_max']} x", "Gearing (Dette/Fonds Propres) < 100%", "Conditionne les futurs CAPEX ou LBO"]),
-        ("EFFET DE CISEAU", "Marges vs Frais fixes", [f"EBE cible >= {normes['ebe_cible']} % du CA", "L'inflation Achats détruit la marge", "Nécessite hausse des prix ou gains pro."]),
+        ("SEUIL DE RENTABILITÉ", "Couverture des frais fixes", ["Date = 365 * (Seuil / CA)", "Indique le jour de bascule", "S'abaisse si la marge augmente"]),
+        ("BFR & TRÉSORERIE", "Cycle d'exploitation", [f"DSO < {normes['dso_max']} j et DPO > {normes['dpo_min']} j", "La croissance consomme du cash", "1 j de DSO gagné = cash immédiat"]),
+        ("COVENANTS BANCAIRES", "Capacité d'emprunt", [f"Dette Nette / EBE < {normes['levier_dette_max']} x", "Gearing (Dette/FP) < 100 %", "Conditionne futurs CAPEX ou LBO"]),
+        ("EFFET DE CISEAU", "Marges vs Frais", [f"EBE cible >= {normes['ebe_cible']} % du CA", "L'inflation détruit la marge", "Exige une hausse des prix"]),
     ]
     for i, (rt, rf, rbullets) in enumerate(refs):
         rx = 0.04 + i * 0.233
@@ -957,3 +954,4 @@ with onglets[3]:
         f"Le projet génère {sum(fcf_list):.2f} M€ de Free Cash-Flow cumulé sur la période, validant la capacité intrinsèque de l'entreprise à s'autofinancer après ses {ppi_annuel:.2f} M€/an de CAPEX.",
         f"{'Le modèle est parfaitement bancable pour une opération de LBO ou de croissance externe structurante.' if (tr_list[-1] > 0 and levier_list[-1] <= normes['levier_dette_max']) else 'Le plan de développement tend la trésorerie. Il est indispensable d améliorer la marge EBE ou d allonger la durée de la dette d investissement.'}"
     )
+
