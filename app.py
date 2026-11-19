@@ -202,7 +202,7 @@ def build_pdf_ent_retro(ent, normes, ans_r, p_r, ebe_r, rn_r, bfr_r, tres_r, det
         g1.tick_params(labelsize=7)
         g1.legend(fontsize=6.8, loc="upper left")
 
-        ax.text(0.52, 0.785, "2. ÉVOLUTION DU BESOIN EN FONDS DE ROULEMENT ET TRÉSORERIE (M€)", fontsize=8.0, fontweight="bold", color="#0f172a", transform=ax.transAxes)
+        ax.text(0.52, 0.785, "2. TRAJECTOIRE BFR & TRÉSORERIE NETTE (M€)", fontsize=8.0, fontweight="bold", color="#0f172a", transform=ax.transAxes)
         g2 = fig.add_axes([0.54, 0.595, 0.41, 0.175])
         g2.bar(ans_r, bfr_r, color="#d97706", width=0.4, label="BFR d'Exploitation")
         g2.plot(ans_r, tres_r, marker="s", color="#2563eb", lw=2, label="Trésorerie Nette")
@@ -633,7 +633,12 @@ with onglets[0]:
         st.line_chart(pd.DataFrame({"Exercice": ans_r, "Chiffre d'Affaires": p_r, "Marge Brute": mb_r, "EBE": ebe_r}).set_index("Exercice"))
     with cg2:
         st.markdown("**2. BFR & Trésorerie (M€)**")
-        st.bar_chart(pd.DataFrame({"Exercice": ans_r, "BFR d'Exploitation": bfr_r}).set_index("Exercice"), color="#d97706")
+        df_bfr = pd.DataFrame({
+            "Exercice": ans_r, 
+            "BFR d'Exploitation": bfr_r, 
+            "Trésorerie Nette": tres_r
+        }).set_index("Exercice")
+        st.bar_chart(df_bfr, color=["#d97706", "#2563eb"])
 
     df_retro_tbl = pd.DataFrame({
         "Indicateurs d'Exploitation & Rentabilité": [
@@ -954,4 +959,3 @@ with onglets[3]:
         f"Le projet génère {sum(fcf_list):.2f} M€ de Free Cash-Flow cumulé sur la période, validant la capacité intrinsèque de l'entreprise à s'autofinancer après ses {ppi_annuel:.2f} M€/an de CAPEX.",
         f"{'Le modèle est parfaitement bancable pour une opération de LBO ou de croissance externe structurante.' if (tr_list[-1] > 0 and levier_list[-1] <= normes['levier_dette_max']) else 'Le plan de développement tend la trésorerie. Il est indispensable d améliorer la marge EBE ou d allonger la durée de la dette d investissement.'}"
     )
-
