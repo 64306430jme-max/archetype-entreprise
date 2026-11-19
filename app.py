@@ -260,7 +260,7 @@ def build_pdf_ent_tbi(ent, normes, score, ca, ach_conso, ext_f, va, ms, ebe, fin
     sc_col = "#059669" if score >= 75 else ("#d97706" if score >= 50 else "#dc2626")
     sc_bg = "#ecfdf5" if score >= 75 else ("#fffbeb" if score >= 50 else "#fef2f2")
     _box(ax, 0.04, 0.815, 0.92, 0.084, fc=sc_bg, ec=sc_col, lw=1.4)
-    ax.text(0.055, 0.876, "SCORING BANQUE DE FRANCE (Estimé)", fontsize=7.0, fontweight="bold", color="#475569", transform=ax.transAxes)
+    ax.text(0.055, 0.876, "SCORING BDF (Estimé)", fontsize=7.0, fontweight="bold", color="#475569", transform=ax.transAxes)
     ax.text(0.055, 0.832, f"{score}/100", fontsize=17.0, fontweight="bold", color=sc_col, transform=ax.transAxes)
     ax.plot([0.255, 0.255], [0.823, 0.891], color="#cbd5e1", lw=1.0, transform=ax.transAxes)
 
@@ -376,7 +376,7 @@ def build_pdf_ent_prospective(ent, normes, ppi_annuel, df_proj, fcf_30, feuille_
         ax.text(kx + 0.012, 0.845, kv, fontsize=11.8, fontweight="bold", color=kc, transform=ax.transAxes)
         ax.text(kx + 0.012, 0.823, ks, fontsize=6.5, color="#64748b", transform=ax.transAxes)
 
-    ax.text(0.04, 0.785, "1. PROJECTION DU CA & DE L'EXCÉDENT BRUT D'EXPLOITATION (M€)", fontsize=7.9, fontweight="bold", color="#0f172a", transform=ax.transAxes)
+    ax.text(0.04, 0.785, "1. PROJECTION CA & EXCÉDENT BRUT (M€)", fontsize=7.8, fontweight="bold", color="#0f172a", transform=ax.transAxes)
     gp1 = fig.add_axes([0.06, 0.595, 0.41, 0.175])
     gp1.plot(df_proj["Année"], df_proj["Chiffre d'Aff. (M€)"], marker="o", color="#1e293b", lw=2, label="Chiffre d'Affaires")
     gp1.plot(df_proj["Année"], df_proj["EBE (M€)"], marker="^", color="#059669", lw=2, label="EBE")
@@ -384,7 +384,7 @@ def build_pdf_ent_prospective(ent, normes, ppi_annuel, df_proj, fcf_30, feuille_
     gp1.tick_params(labelsize=7)
     gp1.legend(fontsize=6.8, loc="upper left")
 
-    ax.text(0.52, 0.785, "2. TRAJECTOIRE DU CASH : BFR ET TRÉSORERIE NETTE (M€)", fontsize=7.9, fontweight="bold", color="#0f172a", transform=ax.transAxes)
+    ax.text(0.52, 0.785, "2. TRAJECTOIRE BFR & TRÉSORERIE NETTE (M€)", fontsize=7.8, fontweight="bold", color="#0f172a", transform=ax.transAxes)
     gp2 = fig.add_axes([0.54, 0.595, 0.41, 0.175])
     gp2.bar(df_proj["Année"], df_proj["BFR d'Exploit. (M€)"], color="#d97706", width=0.4, label="BFR d'Exploitation")
     gp2.plot(df_proj["Année"], df_proj["Trésorerie (M€)"], marker="s", color="#2563eb", lw=2, label="Trésorerie Nette")
@@ -875,7 +875,6 @@ with onglets[3]:
     taux_is = 0.25
 
     for _ in ans_p:
-        # P&L Projection
         curr_ca *= (1 + tx_ca_vol/100.0) * (1 + tx_ca_prix/100.0)
         curr_ach *= (1 + tx_ca_vol/100.0) * (1 + tx_ach_proj/100.0) 
         curr_ext *= (1 + tx_ca_vol/100.0 * 0.5) * (1 + tx_ach_proj/100.0) 
@@ -890,15 +889,12 @@ with onglets[3]:
         curr_rn = curr_rcai - curr_is
         curr_caf = curr_rn + curr_amo
         
-        # BFR & Cash-Flow Projection
         nouveau_bfr = (curr_ca / 365.0) * bfr_j_cible
         var_bfr = nouveau_bfr - curr_bfr
         curr_bfr = nouveau_bfr
         
-        # FCF = CAF - Var BFR - CAPEX
         curr_fcf = curr_caf - var_bfr - ppi_annuel
         
-        # Dette & Tréso
         curr_det = max(0.0, curr_det - curr_remb + emprunt_annuel)
         curr_treso = curr_treso + curr_fcf + emprunt_annuel - curr_remb
         
