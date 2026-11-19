@@ -202,7 +202,7 @@ def build_pdf_ent_retro(ent, normes, ans_r, p_r, ebe_r, rn_r, bfr_r, tres_r, det
         g1.tick_params(labelsize=7)
         g1.legend(fontsize=6.8, loc="upper left")
 
-        ax.text(0.52, 0.785, "2. TRAJECTOIRE BFR & TRÉSORERIE NETTE (M€)", fontsize=8.0, fontweight="bold", color="#0f172a", transform=ax.transAxes)
+        ax.text(0.52, 0.785, "2. ÉVOLUTION DU BESOIN EN FONDS DE ROULEMENT ET TRÉSORERIE (M€)", fontsize=8.0, fontweight="bold", color="#0f172a", transform=ax.transAxes)
         g2 = fig.add_axes([0.54, 0.595, 0.41, 0.175])
         g2.bar(ans_r, bfr_r, color="#d97706", width=0.4, label="BFR d'Exploitation")
         g2.plot(ans_r, tres_r, marker="s", color="#2563eb", lw=2, label="Trésorerie Nette")
